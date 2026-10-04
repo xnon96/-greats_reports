@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقارير العظماء</title>
+
+<style>
+*{box-sizing:border-box}
+:root{
+  --bg:#080b12;
+  --card:#10151f;
+  --card2:#151b27;
+  --border:#242d3d;
+  --text:#f4f4f5;
+  --muted:#929bab;
+  --pink:#e879a9;
+  --pink2:#f5a9ca;
+  --green:#5fd39b;
+  --red:#ef6a78;
+  --gold:#f0c66e;
+  --blue:#72a7ff;
+}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:rgba(8,11,18,.95);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  padding:14px 16px;
+}
+.header-inner{
+  max-width:1100px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+.brand h1{
+  font-size:20px;
+  margin:0;
+}
+.brand small{color:var(--muted)}
+.container{
+  width:min(1100px,calc(100% - 24px));
+  margin:20px auto 80px;
+}
+.nav{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px;
+  margin-bottom:18px;
+}
+.nav button{
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--muted);
+  padding:11px 8px;
+  border-radius:12px;
+  font-weight:700;
+}
+.nav button.active{
+  color:#fff;
+  border-color:var(--pink);
+  background:rgba(232,121,169,.13);
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:14px;
+}
+.title-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
+}
+.title-row h2,.title-row h3{margin:0}
+.muted{color:var(--muted)}
+.btn{
+  border:0;
+  border-radius:10px;
+  padding:10px 14px;
+  font-weight:800;
+}
+.btn-primary{
+  background:var(--pink);
+  color:#111;
+}
+.btn-outline{
+  background:transparent;
+  border:1px solid var(--border);
+  color:var(--text);
+}
+.btn-danger{
+  background:rgba(239,106,120,.12);
+  color:#ff98a3;
+  border:1px solid rgba(239,106,120,.3);
+}
+.btn-green{
+  background:rgba(95,211,155,.13);
+  color:#7ee8b5;
+  border:1px solid rgba(95,211,155,.3);
+}
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+.grid-4{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.field label{
+  display:block;
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:6px;
+}
+.input{
+  width:100%;
+  background:#0b1019;
+  color:#fff;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:11px;
+  outline:none;
+}
+.input:focus{border-color:var(--pink)}
+.stat{
+  background:var(--card2);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+}
+.stat strong{
+  display:block;
+  font-size:24px;
+  margin-top:5px;
+}
+.member{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:13px 0;
+  border-bottom:1px solid var(--border);
+}
+.member:last-child{border:0}
+.member-name{font-weight:800}
+.member-info{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:4px;
+}
+.badge{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:20px;
+  background:rgba(232,121,169,.12);
+  color:var(--pink2);
+  font-size:12px;
+  font-weight:800;
+}
+.badge.red{
+  background:rgba(239,106,120,.12);
+  color:#ff98a3;
+}
+.badge.green{
+  background:rgba(95,211,155,.12);
+  color:#7ee8b5;
+}
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:35px 10px;
+}
+textarea.report{
+  min-height:440px;
+  direction:ltr;
+  text-align:left;
+  font-family:monospace;
+  line-height:1.7;
+}
+.modal-bg{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:rgba(0,0,0,.7);
+  padding:18px;
+  overflow:auto;
+}
+.modal-bg.open{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.modal{
+  width:min(560px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+}
+.modal h3{margin-top:0}
+.modal-footer{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:18px;
+}
+.log{
+  border-right:3px solid var(--pink);
+  padding:8px 12px;
+  margin:8px 0;
+  background:var(--card2);
+  border-radius:8px;
+}
+.log small{color:var(--muted)}
+.toast{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translate(-50%,20px);
+  background:#fff;
+  color:#111;
+  padding:10px 18px;
+  border-radius:30px;
+  opacity:0;
+  pointer-events:none;
+  transition:.2s;
+  z-index:200;
+  font-weight:800;
+}
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+@media(max-width:750px){
+  .nav{
+    grid-template-columns:repeat(3,1fr);
+  }
+  .grid,.grid-4{
+    grid-template-columns:1fr 1fr;
+  }
+  .member{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+  .member .actions{width:100%}
+  .member .actions button{flex:1}
+}
+@media(max-width:450px){
+  .grid,.grid-4{grid-template-columns:1fr}
+  .nav{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <h1>🎙️ تقارير العظماء</h1>
+      <small>إدارة وتقارير فريق المقابلات</small>
+    </div>
+    <span class="badge">THE GREATS</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="nav">
+    <button class="active" onclick="showPage('members',this)">👥 الأعضاء</button>
+    <button onclick="showPage('promotions',this)">👑 الترقيات</button>
+    <button onclick="showPage('blacklist',this)">⛔ القائمة السوداء</button>
+    <button onclick="showPage('interviews',this)">🎙️ المقابلات</button>
+    <button onclick="showPage('reports',this)">📋 التقارير</button>
+  </div>
+
+  <!-- MEMBERS -->
+  <section id="page-members">
+
+    <div class="grid-4">
+      <div class="stat">
+        <span class="muted">الأعضاء</span>
+        <strong id="statMembers">0</strong>
+      </div>
+      <div class="stat">
+        <span class="muted">الإضافات</span>
+        <strong id="statAdded">0</strong>
+      </div>
+      <div class="stat">
+        <span class="muted">الإقصاءات</span>
+        <strong id="statRemoved">0</strong>
+      </div>
+      <div class="stat">
+        <span class="muted">الترقيات</span>
+        <strong id="statPromotions">0</strong>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="card">
+      <div class="title-row">
+        <div>
+          <h2>👥 أعضاء الفريق</h2>
+          <small class="muted">بيانات الفريق الحالية</small>
+        </div>
+        <button class="btn btn-primary" onclick="openMember()">＋ إضافة عضو</button>
+      </div>
+
+      <div class="field">
+        <input id="memberSearch" class="input" placeholder="🔍 البحث عن عضو..." oninput="renderMembers()">
+      </div>
+
+      <div id="membersList"></div>
+    </div>
+
+    <div class="card">
+      <div class="title-row">
+        <h3>🕘 آخر التغييرات</h3>
+      </div>
+      <div id="memberLogs"></div>
+    </div>
+
+  </section>
+
+
+  <!-- PROMOTIONS -->
+  <section id="page-promotions" class="hidden">
+
+    <div class="card">
+      <div class="title-row">
+        <div>
+          <h2>👑 الترقيات</h2>
+          <small class="muted">تسجيل الترقيات المعتمدة</small>
+        </div>
+        <button class="btn btn-primary" onclick="openPromotion()">＋ ترقية</button>
+      </div>
+      <div id="promotionsList"></div>
+    </div>
+
+  </section>
+
+
+  <!-- BLACKLIST -->
+  <section id="page-blacklist" class="hidden">
+
+    <div class="card">
+      <div class="title-row">
+        <div>
+          <h2>⛔ القائمة السوداء</h2>
+          <small class="muted">إدارة الأسماء المستبعدة</small>
+        </div>
+        <button class="btn btn-primary" onclick="openBlacklist()">＋ إضافة</button>
+      </div>
+      <div id="blacklistList"></div>
+    </div>
+
+  </section>
+
+
+  <!-- INTERVIEWS -->
+  <section id="page-interviews" class="hidden">
+
+    <div class="card">
+      <div class="title-row">
+        <div>
+          <h2>🎙️ إحصائيات المقابلات</h2>
+          <small class="muted">التقرير يحسب الإجمالي والتسلسل تلقائيًا</small>
+        </div>
+      </div>
+
+      <div class="grid">
+
+        <div class="field">
+          <label>التاريخ</label>
+          <input type="date" id="iDate" class="input">
+        </div>
+
+        <div class="field">
+          <label>أول تسلسل</label>
+          <input type="number" id="iStart" class="input" min="1" value="1" oninput="calculateInterview()">
+        </div>
+
+      </div>
+
+      <br>
+
+      <div class="grid-4">
+
+        <div class="field">
+          <label>الممرضون المقبولون</label>
+          <input type="number" id="i0" class="input" min="0" value="0" oninput="calculateInterview()">
+        </div>
+
+        <div class="field">
+          <label>رتبة 1</label>
+          <input type="number" id="i1" class="input" min="0" value="0" oninput="calculateInterview()">
+        </div>
+
+        <div class="field">
+          <label>رتبة 2</label>
+          <input type="number" id="i2" class="input" min="0" value="0" oninput="calculateInterview()">
+        </div>
+
+        <div class="field">
+          <label>رتبة 3</label>
+          <input type="number" id="i3" class="input" min="0" value="0" oninput="calculateInterview()">
+        </div>
+
+        <div class="field">
+          <label>رتبة 4</label>
+          <input type="number" id="i4" class="input" min="0" value="0" oninput="calculateInterview()">
+        </div>
+
+        <div class="field">
+          <label>رتبة 5</label>
+          <input type="number" id="i5" class="input" min="0" value="0" oninput="calculateInterview()">
+        </div>
+
+        <div class="field">
+          <label>رتبة 6</label>
+          <input type="number" id="i6" class="input" min="0" value="0" oninput="calculateInterview()">
+        </div>
+
+      </div>
+
+      <br>
+
+      <div class="grid">
+
+        <div class="stat">
+          <span class="muted">إجمالي المقابلات</span>
+          <strong id="iTotal">0</strong>
+        </div>
+
+        <div class="stat">
+          <span class="muted">آخر تسلسل</span>
+          <strong id="iEnd">0</strong>
+        </div>
+
+      </div>
+
+      <br>
+
+      <div class="actions">
+        <button class="btn btn-primary" onclick="saveInterview()">💾 حفظ التقرير</button>
+        <button class="btn btn-outline" onclick="previewInterview()">📋 معاينة ونسخ</button>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <h3>📚 التقارير المحفوظة</h3>
+      <div id="interviewsList"></div>
+    </div>
+
+  </section>
+
+
+  <!-- REPORTS -->
+  <section id="page-reports" class="hidden">
+
+    <div class="card">
+      <div class="title-row">
+        <div>
+          <h2>📋 إنشاء تقرير Discord</h2>
+          <small class="muted">اختاري التقرير والباقي على الآلة المسكينة</small>
+        </div>
+      </div>
+
+      <div class="grid">
+
+        <div class="field">
+          <label>نوع التقرير</label>
+          <select id="reportType" class="input" onchange="generateReport()">
+            <option value="members">تقرير أعضاء الفريق</option>
+            <option value="promotions">طلبات الترقية</option>
+            <option value="blacklist">القائمة السوداء</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>تاريخ التقرير</label>
+          <input type="date" id="reportDate" class="input" onchange="generateReport()">
+        </div>
+
+      </div>
+
+      <br>
+
+      <textarea id="reportOutput" class="input report" readonly></textarea>
+
+      <br>
+
+      <div class="actions">
+        <button class="btn btn-primary" onclick="copyText('reportOutput')">📋 نسخ التقرير</button>
+        <button class="btn btn-outline" onclick="generateReport()">🔄 تحديث</button>
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+
+
+<!-- MEMBER MODAL -->
+<div class="modal-bg" id="memberModal">
+  <div class="modal">
+    <h3 id="memberModalTitle">➕ إضافة عضو</h3>
+
+    <div class="field">
+      <label>اسم العضو</label>
+      <input id="mName" class="input" placeholder="مثال: Mr Boosh">
+    </div>
+
+    <br>
+
+    <div class="grid">
+      <div class="field">
+        <label>الرتبة</label>
+        <select id="mRank" class="input">
+          <option value="3">رتبة 3</option>
+          <option value="4">رتبة 4</option>
+          <option value="5">رتبة 5</option>
+          <option value="6">رتبة 6</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>الجنس</label>
+        <select id="mGender" class="input">
+          <option value="male">ذكر</option>
+          <option value="female">أنثى</option>
+        </select>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="field">
+      <label>Discord ID</label>
+      <input id="mDiscord" class="input" inputmode="numeric" placeholder="مثال: 1502462943244324978">
+    </div>
+
+    <br>
+
+    <div class="field">
+      <label>تاريخ الإضافة</label>
+      <input type="date" id="mDate" class="input">
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('memberModal')">إلغاء</button>
+      <button class="btn btn-primary" onclick="saveMember()">حفظ</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- PROMOTION MODAL -->
+<div class="modal-bg" id="promotionModal">
+  <div class="modal">
+    <h3>👑 تسجيل ترقية</h3>
+
+    <div class="field">
+      <label>العضو</label>
+      <select id="pMember" class="input"></select>
+    </div>
+
+    <br>
+
+    <div class="field">
+      <label>الرتبة الجديدة</label>
+      <select id="pRank" class="input">
+        <option value="3">رتبة 3</option>
+        <option value="4">رتبة 4</option>
+        <option value="5">رتبة 5</option>
+        <option value="6">رتبة 6</option>
+      </select>
+    </div>
+
+    <br>
+
+    <div class="field">
+      <label>التاريخ</label>
+      <input type="date" id="pDate" class="input">
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('promotionModal')">إلغاء</button>
+      <button class="btn btn-primary" onclick="savePromotion()">اعتماد الترقية</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- BLACKLIST MODAL -->
+<div class="modal-bg" id="blacklistModal">
+  <div class="modal">
+    <h3>⛔ إضافة للقائمة السوداء</h3>
+
+    <div class="field">
+      <label>الاسم</label>
+      <input id="bName" class="input" placeholder="اسم الشخص">
+    </div>
+
+    <br>
+
+    <div class="field">
+      <label>السبب - اختياري</label>
+      <input id="bReason" class="input" placeholder="سبب الإضافة">
+    </div>
+
+    <br>
+
+    <div class="field">
+      <label>التاريخ</label>
+      <input type="date" id="bDate" class="input">
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('blacklistModal')">إلغاء</button>
+      <button class="btn btn-primary" onclick="saveBlacklist()">إضافة</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- REPORT PREVIEW MODAL -->
+<div class="modal-bg" id="previewModal">
+  <div class="modal">
+    <h3>📋 التقرير الجاهز</h3>
+    <textarea id="previewText" class="input report" readonly></textarea>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('previewModal')">إغلاق</button>
+      <button class="btn btn-primary" onclick="copyText('previewText')">📋 نسخ</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+/* =============================
+   STORAGE
+============================= */
+
+const KEYS = {
+  members:"greats_reports_members",
+  logs:"greats_reports_logs",
+  promotions:"greats_reports_promotions",
+  blacklist:"greats_reports_blacklist",
+  interviews:"greats_reports_interviews"
+};
+
+let members = load(KEYS.members,[]);
+let logs = load(KEYS.logs,[]);
+let promotions = load(KEYS.promotions,[]);
+let blacklist = load(KEYS.blacklist,[]);
+let interviews = load(KEYS.interviews,[]);
+
+let editingMember = null;
+
+
+/* =============================
+   DISCORD CODES
+   عدلي أكواد الرتب من هنا فقط
+============================= */
+
+const RANK_CODES = {
+  3: "3️⃣",
+  4: "4️⃣",
+  5: "5️⃣",
+  6: "6️⃣"
+};
+
+const CODES = {
+  header:"<a:odin_gif_m_58:966085639529435186>",
+  write:"<a:Rex_HandWrite:1430948188692545638>",
+  hashtag:"<a:hashtag:1477088090118946957>",
+  approved:"<a:white_valid_premium_logo:1370476945636200488>",
+  arrow:"<a:animatedarrowred:1330113130625503252>"
+};
+
+
+/* =============================
+   BASIC
+============================= */
+
+function load(key,fallback){
+  try{
+    const value=localStorage.getItem(key);
+    return value?JSON.parse(value):fallback;
+  }catch{
+    return fallback;
+  }
+}
+
+function save(key,data){
+  localStorage.setItem(key,JSON.stringify(data));
+}
+
+function id(){
+  return Date.now().toString(36)+Math.random().toString(36).slice(2);
+}
+
+function isoToday(){
+  const d=new Date();
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,"0");
+  const day=String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+
+function prettyDate(value){
+  if(!value)return "";
+  const [y,m,d]=value.split("-");
+  return `${d}/${m}/${y}`;
+}
+
+function discordMention(discordId){
+  const clean=String(discordId||"")
+    .replace(/[<@!>]/g,"")
+    .trim();
+
+  return clean?`<@${clean}>`:"";
+}
+
+function esc(value){
+  return String(value||"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+
+function showPage(name,button){
+  document.querySelectorAll("section[id^='page-']")
+    .forEach(x=>x.classList.add("hidden"));
+
+  document.getElementById("page-"+name)
+    .classList.remove("hidden");
+
+  document.querySelectorAll(".nav button")
+    .forEach(x=>x.classList.remove("active"));
+
+  button.classList.add("active");
+
+  if(name==="reports")generateReport();
+}
+
+function openModal(id){
+  document.getElementById(id).classList.add("open");
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.remove("open");
+}
+
+function toast(text){
+  const el=document.getElementById("toast");
+  el.textContent=text;
+  el.classList.add("show");
+  setTimeout(()=>el.classList.remove("show"),2200);
+}
+
+
+/* =============================
+   MEMBERS
+============================= */
+
+function openMember(memberId=null){
+  editingMember=memberId;
+
+  const m=members.find(x=>x.id===memberId);
+
+  document.getElementById("memberModalTitle").textContent=
+    m?"✏️ تعديل العضو":"➕ إضافة عضو";
+
+  document.getElementById("mName").value=m?.name||"";
+  document.getElementById("mRank").value=m?.rank||"3";
+  document.getElementById("mGender").value=m?.gender||"male";
+  document.getElementById("mDiscord").value=m?.discord||"";
+  document.getElementById("mDate").value=m?.joinDate||isoToday();
+
+  openModal("memberModal");
+}
+
+function saveMember(){
+  const name=document.getElementById("mName").value.trim();
+  const rank=parseInt(document.getElementById("mRank").value);
+  const gender=document.getElementById("mGender").value;
+  const discord=document.getElementById("mDiscord").value.trim();
+  const joinDate=document.getElementById("mDate").value||isoToday();
+
+  if(!name){
+    toast("اكتبي اسم العضو أولاً");
+    return;
+  }
+
+  if(editingMember){
+    const m=members.find(x=>x.id===editingMember);
+
+    m.name=name;
+    m.rank=rank;
+    m.gender=gender;
+    m.discord=discord;
+    m.joinDate=joinDate;
+
+    logs.unshift({
+      id:id(),
+      type:"edit",
+      name,
+      date:isoToday(),
+      text:`تم تعديل بيانات ${name}`
+    });
+
+    toast("تم تعديل العضو ✅");
+  }else{
+    members.push({
+      id:id(),
+      name,
+      rank,
+      gender,
+      discord,
+      joinDate
+    });
+
+    logs.unshift({
+      id:id(),
+      type:"add",
+      name,
+      rank,
+      date:joinDate,
+      text:`تمت إضافة ${name} إلى الفريق`
+    });
+
+    toast("تمت إضافة العضو 🤍");
+  }
+
+  save(KEYS.members,members);
+  save(KEYS.logs,logs);
+
+  closeModal("memberModal");
+  renderAll();
+}
+
+function removeMember(memberId){
+  const m=members.find(x=>x.id===memberId);
+  if(!m)return;
+
+  if(!confirm(`إقصاء ${m.name} من الفريق؟`))return;
+
+  const reason=prompt("سبب الإقصاء - اختياري")||"";
+
+  logs.unshift({
+    id:id(),
+    type:"remove",
+    name:m.name,
+    rank:m.rank,
+    discord:m.discord,
+    date:isoToday(),
+    reason,
+    text:`تم إقصاء ${m.name} من الفريق`
+  });
+
+  members=members.filter(x=>x.id!==memberId);
+
+  save(KEYS.members,members);
+  save(KEYS.logs,logs);
+
+  renderAll();
+  toast("تم تسجيل الإقصاء");
+}
+
+function renderMembers(){
+  const search=document.getElementById("memberSearch").value.toLowerCase();
+
+  const list=members
+    .filter(m=>m.name.toLowerCase().includes(search))
+    .sort((a,b)=>b.rank-a.rank);
+
+  const el=document.getElementById("membersList");
+
+  if(!list.length){
+    el.innerHTML=`<div class="empty">لا يوجد أعضاء حالياً 🤍</div>`;
+    return;
+  }
+
+  el.innerHTML=list.map(m=>`
+    <div class="member">
+      <div>
+        <div class="member-name">
+          ${esc(m.name)}
+          <span class="badge">رتبة ${m.rank}</span>
+        </div>
+        <div class="member-info">
+          ${m.discord?esc(discordMention(m.discord))+" • ":""}
+          انضم ${prettyDate(m.joinDate)}
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-outline" onclick="openMember('${m.id}')">✏️ تعديل</button>
+        <button class="btn btn-danger" onclick="removeMember('${m.id}')">🗑️ إقصاء</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderLogs(){
+  const el=document.getElementById("memberLogs");
+
+  if(!logs.length){
+    el.innerHTML=`<div class="empty">ما فيه تغييرات مسجلة</div>`;
+    return;
+  }
+
+  el.innerHTML=logs.slice(0,12).map(l=>`
+    <div class="log">
+      <strong>${esc(l.text)}</strong><br>
+      <small>${prettyDate(l.date)} ${l.reason?"• "+esc(l.reason):""}</small>
+    </div>
+  `).join("");
+}
+
+
+/* =============================
+   PROMOTIONS
+============================= */
+
+function openPromotion(){
+  if(!members.length){
+    toast("أضيفي أعضاء أولاً");
+    return;
+  }
+
+  document.getElementById("pMember").innerHTML=
+    members
+      .sort((a,b)=>a.name.localeCompare(b.name))
+      .map(m=>`<option value="${m.id}">${esc(m.name)} — رتبة ${m.rank}</option>`)
+      .join("");
+
+  document.getElementById("pDate").value=isoToday();
+  openModal("promotionModal");
+}
+
+function savePromotion(){
+  const memberId=document.getElementById("pMember").value;
+  const newRank=parseInt(document.getElementById("pRank").value);
+  const date=document.getElementById("pDate").value||isoToday();
+
+  const m=members.find(x=>x.id===memberId);
+  if(!m)return;
+
+  const oldRank=m.rank;
+
+  promotions.unshift({
+    id:id(),
+    memberId,
+    name:m.name,
+    discord:m.discord,
+    oldRank,
+    newRank,
+    date
+  });
+
+  m.rank=newRank;
+
+  logs.unshift({
+    id:id(),
+    type:"promotion",
+    name:m.name,
+    date,
+    text:`تمت ترقية ${m.name} من رتبة ${oldRank} إلى رتبة ${newRank}`
+  });
+
+  save(KEYS.promotions,promotions);
+  save(KEYS.members,members);
+  save(KEYS.logs,logs);
+
+  closeModal("promotionModal");
+  renderAll();
+  toast("تم اعتماد الترقية 👑");
+}
+
+function deletePromotion(pid){
+  promotions=promotions.filter(x=>x.id!==pid);
+  save(KEYS.promotions,promotions);
+  renderAll();
+}
+
+function renderPromotions(){
+  const el=document.getElementById("promotionsList");
+
+  if(!promotions.length){
+    el.innerHTML=`<div class="empty">لا توجد ترقيات مسجلة</div>`;
+    return;
+  }
+
+  el.innerHTML=promotions.map(p=>`
+    <div class="member">
+      <div>
+        <div class="member-name">${esc(p.name)}</div>
+        <div class="member-info">
+          رتبة ${p.oldRank} ← رتبة ${p.newRank} • ${prettyDate(p.date)}
+        </div>
+      </div>
+      <button class="btn btn-danger" onclick="deletePromotion('${p.id}')">حذف</button>
+    </div>
+  `).join("");
+}
+
+
+/* =============================
+   BLACKLIST
+============================= */
+
+function openBlacklist(){
+  document.getElementById("bName").value="";
+  document.getElementById("bReason").value="";
+  document.getElementById("bDate").value=isoToday();
+  openModal("blacklistModal");
+}
+
+function saveBlacklist(){
+  const name=document.getElementById("bName").value.trim();
+  const reason=document.getElementById("bReason").value.trim();
+  const date=document.getElementById("bDate").value||isoToday();
+
+  if(!name){
+    toast("اكتبي الاسم");
+    return;
+  }
+
+  blacklist.unshift({
+    id:id(),
+    name,
+    reason,
+    date
+  });
+
+  save(KEYS.blacklist,blacklist);
+  closeModal("blacklistModal");
+  renderAll();
+  toast("تمت الإضافة للقائمة السوداء");
+}
+
+function deleteBlacklist(bid){
+  blacklist=blacklist.filter(x=>x.id!==bid);
+  save(KEYS.blacklist,blacklist);
+  renderAll();
+}
+
+function renderBlacklist(){
+  const el=document.getElementById("blacklistList");
+
+  if(!blacklist.length){
+    el.innerHTML=`<div class="empty">القائمة السوداء فارغة</div>`;
+    return;
+  }
+
+  el.innerHTML=blacklist.map(b=>`
+    <div class="member">
+      <div>
+        <div class="member-name">
+          ${esc(b.name)}
+          <span class="badge red">Black List</span>
+        </div>
+        <div class="member-info">
+          ${prettyDate(b.date)}
+          ${b.reason?" • "+esc(b.reason):""}
+        </div>
+      </div>
+      <button class="btn btn-danger" onclick="deleteBlacklist('${b.id}')">حذف</button>
+    </div>
+  `).join("");
+}
+
+
+/* =============================
+   INTERVIEWS
+============================= */
+
+function interviewValues(){
+  const values=[];
+  for(let i=0;i<=6;i++){
+    values.push(
+      Math.max(0,parseInt(document.getElementById("i"+i).value)||0)
+    );
+  }
+  return values;
+}
+
+function calculateInterview(){
+  const values=interviewValues();
+  const total=values.reduce((a,b)=>a+b,0);
+  const start=Math.max(1,parseInt(document.getElementById("iStart").value)||1);
+  const end=total?start+total-1:start-1;
+
+  document.getElementById("iTotal").textContent=total;
+  document.getElementById("iEnd").textContent=end;
+
+  return {values,total,start,end};
+}
+
+function saveInterview(){
+  const calc=calculateInterview();
+  const date=document.getElementById("iDate").value||isoToday();
+
+  if(calc.total===0){
+    toast("أدخلي نتائج المقابلات أولاً");
+    return;
+  }
+
+  interviews.unshift({
+    id:id(),
+    date,
+    values:calc.values,
+    total:calc.total,
+    start:calc.start,
+    end:calc.end
+  });
+
+  save(KEYS.interviews,interviews);
+  renderInterviews();
+  toast("تم حفظ تقرير المقابلات 🎙️");
+}
+
+function interviewReport(data){
+  const v=data.values;
+
+  return `## 🎙️ إحصائيات المقابلات اليومية 🎙️
+
+## 📅 ${prettyDate(data.date)}
+
+## 📊 نتائج المقابلات
+
+## الممرضون المقبولون ┃ [${v[0]}]
+
+## الترقية إلى رتبة -1- ┃ [${v[1]}]
+
+## الترقية إلى رتبة -2- ┃ [${v[2]}]
+
+## الترقية إلى رتبة -3- ┃ [${v[3]}]
+
+## الترقية إلى رتبة -4- ┃ [${v[4]}]
+
+## الترقية إلى رتبة -5- ┃ [${v[5]}]
+
+## الترقية إلى رتبة -6- ┃ [${v[6]}]
+
+────୨ৎ──── ────୨ৎ──── ────୨ৎ────
+
+## يبدأ من التسلسل رقم [${data.start}]
+
+## وينتهي بالتسلسل رقم [${data.end}]
+
+## إجمالي المقابلات ┃ [${data.total}]
+
+## محسوب بالكامل ✅`;
+}
+
+function previewInterview(data=null){
+  if(!data){
+    const calc=calculateInterview();
+    data={
+      date:document.getElementById("iDate").value||isoToday(),
+      values:calc.values,
+      total:calc.total,
+      start:calc.start,
+      end:calc.end
+    };
+  }
+
+  document.getElementById("previewText").value=interviewReport(data);
+  openModal("previewModal");
+}
+
+function deleteInterview(iid){
+  interviews=interviews.filter(x=>x.id!==iid);
+  save(KEYS.interviews,interviews);
+  renderInterviews();
+}
+
+function renderInterviews(){
+  const el=document.getElementById("interviewsList");
+
+  if(!interviews.length){
+    el.innerHTML=`<div class="empty">لا توجد تقارير محفوظة</div>`;
+    return;
+  }
+
+  el.innerHTML=interviews.map(i=>`
+    <div class="member">
+      <div>
+        <div class="member-name">${prettyDate(i.date)}</div>
+        <div class="member-info">
+          ${i.total} مقابلة • التسلسل ${i.start} - ${i.end}
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-outline" onclick='previewInterview(${JSON.stringify(i)})'>عرض</button>
+        <button class="btn btn-danger" onclick="deleteInterview('${i.id}')">حذف</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+
+/* =============================
+   REPORTS
+============================= */
+
+function generateReport(){
+  const type=document.getElementById("reportType").value;
+  const date=document.getElementById("reportDate").value||isoToday();
+
+  let text="";
+
+  if(type==="members")text=membersReport(date);
+  if(type==="promotions")text=promotionsReport(date);
+  if(type==="blacklist")text=blacklistReport(date);
+
+  document.getElementById("reportOutput").value=text;
+}
+
+function membersReport(date){
+  const active=[...members].sort((a,b)=>b.rank-a.rank);
+
+  const added=logs.filter(x=>x.type==="add"&&x.date===date);
+  const removed=logs.filter(x=>x.type==="remove"&&x.date===date);
+
+  let text=
+`## ${CODES.header} تقرير أعضاء فريق المقابلات ${CODES.header}
+
+## ${CODES.write} التاريخ : ${prettyDate(date)} 📅
+
+## ${CODES.hashtag} تحديثات إدارية معتمدة ${CODES.approved}
+
+## 👥 أعضاء الفريق الحاليون
+
+`;
+
+  [6,5,4,3].forEach(rank=>{
+    const group=active.filter(m=>m.rank===rank);
+
+    if(group.length){
+      text+=`## رتبة ${rank}\n`;
+
+      group.forEach(m=>{
+        const mention=discordMention(m.discord);
+        text+=`## ${CODES.arrow} ${m.name}${mention?" ┃ "+mention:""}\n`;
+      });
+
+      text+="\n";
+    }
+  });
+
+  text+=`## ━━━━━━━━━━━━━━━━━━━━
+
+## ➕ الإضافات الجديدة
+`;
+
+  if(added.length){
+    added.forEach(a=>{
+      text+=`## ${CODES.arrow} ${a.name} ┃ رتبة ${a.rank}\n`;
+    });
+  }else{
+    text+=`## لا يوجد\n`;
+  }
+
+  text+=`
+## ━━━━━━━━━━━━━━━━━━━━
+
+## ❌ الإقصاءات
+`;
+
+  if(removed.length){
+    removed.forEach(r=>{
+      text+=`## ${CODES.arrow} ${r.name}${r.reason?" ┃ "+r.reason:""}\n`;
+    });
+  }else{
+    text+=`## لا يوجد\n`;
+  }
+
+  return text.trim();
+}
+
+function promotionsReport(date){
+  const list=promotions.filter(p=>p.date===date);
+
+  let text=
+`## ${CODES.header} طلبات الترقية المعتمدة ${CODES.header}
+
+## ${CODES.write} التاريخ : ${prettyDate(date)} 📅
+
+## ${CODES.hashtag} طلبات ترقية تم مراجعتها واعتمادها من قبل الإدارة ${CODES.approved}
+
+## ✅ الأعضاء المعتمدون
+
+`;
+
+  if(!list.length){
+    text+="## لا توجد ترقيات مسجلة بهذا التاريخ";
+    return text;
+  }
+
+  list.forEach(p=>{
+    text+=`## ${CODES.arrow} ${p.name} ┃ ${RANK_CODES[p.newRank]||""} رتبة ${p.newRank}\n`;
+  });
+
+  return text.trim();
+}
+
+function blacklistReport(date){
+  const list=blacklist.filter(b=>b.date===date);
+
+  let text=
+`## ⛔ تحديث القائمة السوداء
+
+## 📅 التاريخ : ${prettyDate(date)}
+
+`;
+
+  if(!list.length){
+    text+="## لا توجد إضافات بهذا التاريخ";
+    return text;
+  }
+
+  list.forEach(b=>{
+    text+=`## ${CODES.arrow} ${b.name}${b.reason?" ┃ "+b.reason:""}\n`;
+  });
+
+  return text.trim();
+}
+
+
+/* =============================
+   COPY
+============================= */
+
+async function copyText(elementId){
+  const text=document.getElementById(elementId).value;
+
+  try{
+    await navigator.clipboard.writeText(text);
+  }catch{
+    const el=document.getElementById(elementId);
+    el.select();
+    document.execCommand("copy");
+  }
+
+  toast("تم نسخ التقرير 📋");
+}
+
+
+/* =============================
+   STATS / RENDER
+============================= */
+
+function updateStats(){
+  document.getElementById("statMembers").textContent=members.length;
+
+  document.getElementById("statAdded").textContent=
+    logs.filter(x=>x.type==="add").length;
+
+  document.getElementById("statRemoved").textContent=
+    logs.filter(x=>x.type==="remove").length;
+
+  document.getElementById("statPromotions").textContent=
+    promotions.length;
+}
+
+function renderAll(){
+  renderMembers();
+  renderLogs();
+  renderPromotions();
+  renderBlacklist();
+  renderInterviews();
+  updateStats();
+}
+
+
+/* =============================
+   START
+============================= */
+
+document.getElementById("iDate").value=isoToday();
+document.getElementById("reportDate").value=isoToday();
+
+renderAll();
+calculateInterview();
+generateReport();
+
+document.querySelectorAll(".modal-bg").forEach(bg=>{
+  bg.addEventListener("click",e=>{
+    if(e.target===bg)bg.classList.remove("open");
+  });
+});
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){
+    document.querySelectorAll(".modal-bg.open")
+      .forEach(x=>x.classList.remove("open"));
+  }
+});
+
+</script>
+
+</body>
+</html>
